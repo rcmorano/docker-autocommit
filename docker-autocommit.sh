@@ -65,3 +65,9 @@ fi
 aliases_monitor &
 
 docker run -t -i $IMAGE /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> ~/.bashrc; /bin/bash; rm ~/.bashrc'
+
+# if Dockerfile only has the first line, remove it
+if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
+then 
+	rm $DOCKERFILE
+fi
