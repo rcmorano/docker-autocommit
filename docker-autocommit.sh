@@ -45,9 +45,10 @@ function log_command() {
 }
 
 
-IMAGE=$1
+DOCKER_RUN_ARGS="$@"
+DOCKER_BASE_IMAGE=$(echo $DOCKER_RUN_ARGS | awk '{print $NF}')
 export DOCKERFILE="Dockerfile.$(date +%Y%m%d%H%M)"
-echo "FROM $IMAGE" > $DOCKERFILE
+echo "FROM $DOCKER_BASE_IMAGE" > $DOCKERFILE
 
 if [ $(id -u) -ne 0 ]
 then
@@ -64,10 +65,13 @@ fi
 #commit_monitor &
 aliases_monitor &
 
-docker run -t -i $IMAGE /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> ~/.bashrc; /bin/bash; rm ~/.bashrc'
+docker run -t -i $DOCKER_RUN_ARGS /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> /etc/profile.d/inmediately-save-history.sh; /bin/bash --login; rm /etc/profile.d/inmediately-save-history.sh; sleep 0.1; rm ~/.bash_history'
 
 # if Dockerfile only has the first line, remove it
 if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
 then 
 	rm $DOCKERFILE
 fi
+
+# cleaning possible zombies...
+#killall -9 $$
