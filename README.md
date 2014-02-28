@@ -112,8 +112,9 @@ Just run a 'docker-autocommit' developement container and start validating featu
 
 ```
 git clone https://github.com/rcmorano/docker-autocommit.git
-_DOCKER_BUILD_HERE_
-docker run -v $PWD/docker-autocommit:/docker-autocommit -privileged -t -i rcmorano/docker-autocommit-dev-container
+# -v is used to mount git repo inside the dev environment and
+# -privileged is used because 'docker' is run inside the dev container for bdd tests
+docker run -v $PWD/docker-autocommit:/docker-autocommit -privileged -t -i rcmorano/docker-autocommit-dev-env
 ```
 And you'll get a pristine developer environment to start implementing features:
 
@@ -121,10 +122,9 @@ And you'll get a pristine developer environment to start implementing features:
 WARNING: WARNING: Local (127.0.0.1) DNS resolver found in resolv.conf and containers can't use it. Using default external servers : [8.8.8.8 8.8.4.4]
 root@c29ae4ab011d:/# cd docker-autocommit
 root@c29ae4ab011d:/docker-autocommit# cucumber
+_#TODO#_
 ...
 ```
-
-_#TODO#_
 
 *Note* that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container.
 
