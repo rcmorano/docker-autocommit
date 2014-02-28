@@ -72,6 +72,3 @@ if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
 then 
 	rm $DOCKERFILE
 fi
-
-# cleaning possible zombies...
-#killall -9 $$
