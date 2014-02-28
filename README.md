@@ -87,7 +87,7 @@ RUN exit 0
 Clone repository and link executable:
 
 ```
-git clone http://github.com/here
+git clone https://github.com/rcmorano/docker-autocommit.git
 sudo ln -s $PWD/docker-autocommit/bin/docker-autocommit /usr/local/sbin/
 chmod +x /usr/local/sbin/docker-autocommit
 ```
@@ -95,7 +95,7 @@ chmod +x /usr/local/sbin/docker-autocommit
 Or just download the binary:
 
 ```
-curl -L http://github.com/here -o /usr/local/sbin/
+curl -L https://raw.github.com/rcmorano/docker-autocommit/master/bin/docker-autocommit -o /usr/local/sbin/docker-autocommit
 chmod +x /usr/local/sbin/docker-autocommit
 ```
 
