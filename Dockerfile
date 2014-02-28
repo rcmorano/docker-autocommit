@@ -1,4 +1,4 @@
-FROM rcmorano/saucy-rvm:ruby-2.1.0
+FROM rcmorano/saucy-rvm:ruby-head
 MAINTAINER rcmova@gmail.com
 # install depends
 RUN echo 'APT::Install-Recommends "false";' >> /etc/apt/apt.conf.d/99norecommends
