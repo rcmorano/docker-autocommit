@@ -106,6 +106,8 @@ chmod +x /usr/local/sbin/docker-autocommit
 
 # Contrib!
 
+_#FIXME#_
+
 Just run a 'docker-autocommit' developement container and start validating features:
 
 ```
@@ -121,6 +123,10 @@ root@c29ae4ab011d:/# cd docker-autocommit
 root@c29ae4ab011d:/docker-autocommit# cucumber
 ...
 ```
+
+_#TODO#_
+
+*Note* that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container.
 
 ## Why this way of development?
 
