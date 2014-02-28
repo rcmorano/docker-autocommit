@@ -32,7 +32,7 @@ Because this is just a PoC :]
 
 Install depends:
 ```
-apt-get install -y git curl libnotify-bin || yum install git curl inotify-tools
+apt-get install -y git curl inotify-tools || yum install git curl inotify-tools
 ```
 
 Clone repository and link executable:
