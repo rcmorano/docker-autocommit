@@ -84,6 +84,11 @@ RUN exit 0
 
 # Installation
 
+Install depends:
+```
+apt-get install -y libnotify-bin || yum install inotify-tools
+```
+
 Clone repository and link executable:
 
 ```
