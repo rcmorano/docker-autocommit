@@ -28,6 +28,28 @@ But I have some other branch around to implement it in ruby.
 
 Because this is just a PoC :]
 
+# Installation
+
+Install depends:
+```
+apt-get install -y git curl libnotify-bin || yum install git curl inotify-tools
+```
+
+Clone repository and link executable:
+
+```
+git clone https://github.com/rcmorano/docker-autocommit.git
+sudo ln -s $PWD/docker-autocommit/bin/docker-autocommit /usr/local/sbin/
+chmod +x /usr/local/sbin/docker-autocommit
+```
+
+Or just download the binary:
+
+```
+sudo curl -L https://raw.github.com/rcmorano/docker-autocommit/master/bin/docker-autocommit -o /usr/local/sbin/docker-autocommit
+sudo chmod +x /usr/local/sbin/docker-autocommit
+```
+
 ## Okay, what's the flow?
 
 Create your container development dir:
@@ -81,28 +103,6 @@ RUN exit 0
 * You can edit the generated _Dockerfile_ while running the interactive shell, but be careful not to overwrite changes made by 'docker-autocommit'.
 * If you _<Ctrl+D>_ on the interactive shell 'exit' will not be written to _Dockerfile_
 * More to add, suggestions accepted
-
-# Installation
-
-Install depends:
-```
-apt-get install -y libnotify-bin || yum install inotify-tools
-```
-
-Clone repository and link executable:
-
-```
-git clone https://github.com/rcmorano/docker-autocommit.git
-sudo ln -s $PWD/docker-autocommit/bin/docker-autocommit /usr/local/sbin/
-chmod +x /usr/local/sbin/docker-autocommit
-```
-
-Or just download the binary:
-
-```
-curl -L https://raw.github.com/rcmorano/docker-autocommit/master/bin/docker-autocommit -o /usr/local/sbin/docker-autocommit
-chmod +x /usr/local/sbin/docker-autocommit
-```
 
 # Contrib!
 
