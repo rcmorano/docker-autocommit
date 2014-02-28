@@ -104,7 +104,7 @@ chmod +x /usr/local/sbin/docker-autocommit
 Just run a 'docker-autocommit' developement container and start validating features:
 
 ```
-git clone http://github.com/here
+git clone https://github.com/rcmorano/docker-autocommit.git
 _DOCKER_BUILD_HERE_
 docker run -v $PWD/docker-autocommit:/docker-autocommit -privileged -t -i rcmorano/docker-autocommit-dev-container
 ```
