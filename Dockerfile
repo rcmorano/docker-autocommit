@@ -13,6 +13,7 @@ RUN /bin/bash --login -c 'rvm gemset create docker-autocommit'
 RUN /bin/bash --login -c 'gem install cucumber --no-ri --no-rdoc'
 
 # launch docker in debug mode inside a 'screen' session
-CMD ["echo","/usr/bin/screen -dmS dockerd docker -D -d -s btrfs"]
+RUN echo '/usr/bin/screen -dmS dockerd docker -D -d -s btrfs' > /etc/profile.d/run-dockerd.sh
+
 # spawn a rvm-able shell
 CMD ["/bin/bash","--login"]
