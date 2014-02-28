@@ -141,9 +141,6 @@ _#TODO#_
 
 * Note that we mount '/var/lib/docker' in order to have the outside-docker daemon images so we do not have to redownload 'ubuntu' every time we run a development container
   * Note also that you may not have a pristine environment for development and testing this way
--* If you are using the experimental 'btrfs' driver, you'll have to mount '/var/lib/docker' volume in a temporary dir before:
-```
-```-
 
 # License and Author
 
