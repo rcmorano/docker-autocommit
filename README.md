@@ -84,7 +84,7 @@ exit
 rcmorano@localhost:~/Projects/container-poc$
 ```
 
-And we get a ready to build _Dockerfile_:
+Get a ready to build _Dockerfile_:
 ```
 rcmorano@localhost:~/Projects/container-poc$ ls
 Dockerfile.201402222035
@@ -95,13 +95,13 @@ RUN apt-get install -yo 'APT::Install-Recommends=false' -o 'APT::Install-Suggest
 RUN exit 0
 
 ```
+_NOTE: if you exit from shell with CTRL+D the 'exit 0' won't be saved to Dockerfile_
 
 ## Considerations
 
 * You could dettach and commit your interactive container since 'docker-autocommit' will clean the only two files it produces but...:
 * IMPORTANT: Note that if you make any changes to filesystem from outside command line (in e.g.: you edit files with 'vim' or modify anything interactively), your _Dockerfile_ might build an inconsistent container not reproducing the exactly same container as the one of the interactive shell.
 * You can edit the generated _Dockerfile_ while running the interactive shell, but be careful not to overwrite changes made by 'docker-autocommit'.
-* If you _<Ctrl+D>_ on the interactive shell 'exit' will not be written to _Dockerfile_
 * More to add, suggestions accepted
 
 # Contrib!
