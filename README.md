@@ -108,7 +108,7 @@ _NOTE: if you exit from shell with CTRL+D the 'exit 0' won't be saved to Dockerf
 
 _#FIXME#_
 
-Just run a 'docker-autocommit' developement container and start validating features:
+Just run a 'docker-autocommit' developement container (it's a trusted build linked to this project's _Dockerfile_):
 
 ```
 git clone https://github.com/rcmorano/docker-autocommit.git
@@ -116,7 +116,7 @@ git clone https://github.com/rcmorano/docker-autocommit.git
 # -privileged is used because 'docker' is run inside the dev container for bdd tests
 docker run -v $PWD/docker-autocommit:/docker-autocommit -privileged -t -i rcmorano/docker-autocommit-dev-env
 ```
-And you'll get a pristine developer environment to start implementing features:
+And you'll get a pristine developer environment with a separated 'git' repo mounted inside the container to start implementing its features:
 
 ```
 WARNING: WARNING: Local (127.0.0.1) DNS resolver found in resolv.conf and containers can't use it. Using default external servers : [8.8.8.8 8.8.4.4]
@@ -126,7 +126,8 @@ _#TODO#_
 ...
 ```
 
-*Note* that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container.
+*Note* that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container if you are using pure 'aufs'.
+*Note2* 'aufs' use on top of 'btrfs' is broken AFAIK 
 
 ## Why this way of development?
 
@@ -139,7 +140,7 @@ _#TODO#_
 
 ## Considerations
 
-* Note that we mount '/var/lib/docker' in order to have the outside-docker daemon images so we do not have to redownload 'ubuntu' every time we run a development container
+* If you use 'aufs' and you'd like to have the outside-docker daemon images available to the dev-container so you do not have to redownload 'ubuntu' every time we run a development container, you should mount '/var/lib/docker' inside the container
   * Note also that you may not have a pristine environment for development and testing this way
 
 # License and Author
