@@ -1,74 +1,115 @@
 #!/bin/bash
+set -x
 
 function aliases_monitor() {
-	CONTAINER=$(get_container_id)
-	CONTAINER_ROOT=$(get_container_root)
-	CONTAINER_BASH_HISTORY="${CONTAINER_ROOT}/.bash_history"
-	INOTIFY_OPTIONS='-m -r'
+    CONTAINER=$(get_container_id)
+    CONTAINER_ROOT=$(get_container_root)
+    CONTAINER_BASH_HISTORY="${CONTAINER_ROOT}/.bash_history"
+    INOTIFY_OPTIONS='-m -r'
 
-	while [[ ! "$(sudo inotifywait -e create $CONTAINER_ROOT 2> /dev/null)" =~ .*bash_history.* ]]
-	do
-		continue
-	done
-	log_command
+    while [[ ! "$(sudo inotifywait -e create $CONTAINER_ROOT 2> /dev/null)" =~ .*bash_history.* ]]
+    do
+        continue
+    done
+    log_command
 
-	while sudo inotifywait -e modify $CONTAINER_BASH_HISTORY &> /dev/null
-	do
-		log_command
-	done
+    while sudo inotifywait -e modify $CONTAINER_BASH_HISTORY &> /dev/null
+    do
+        log_command
+    done
+}
+
+function create_base_dockerfile() {
+    export DOCKERFILE="Dockerfile.$(date +%Y%m%d%H%M)"
+    echo "FROM $DOCKER_BASE_IMAGE" > $DOCKERFILE
+
 }
 
 function get_container_id() {
-	CURRENT_LAST_CONTAINER=$(get_last_container)
-	while [ "$CURRENT_LAST_CONTAINER" == "$(get_last_container)" ]
-	do
-		sleep 0.1
-	done
-	get_last_container
+    CURRENT_LAST_CONTAINER=$(get_last_container)
+    while [ "$CURRENT_LAST_CONTAINER" == "$(get_last_container)" ]
+    do
+        sleep 0.1
+    done
+    get_last_container
 }
 
 function get_container_root() {
-	ROOT_DIR="$(docker inspect $CONTAINER | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g')/root"
-	echo $ROOT_DIR
+    ROOT_DIR="$(docker inspect $CONTAINER | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g')/root"
+    echo $ROOT_DIR
 }
 
 function get_last_container() {
-	LAST_CONTAINER=$(docker ps | grep -v ^CONTAINER | head -n1 | awk '{print $1}')
-	echo $LAST_CONTAINER
+    LAST_CONTAINER=$(docker ps | grep -v ^CONTAINER | head -n1 | awk '{print $1}')
+    echo $LAST_CONTAINER
 }
-
-#function init_conf() {
-#}
 
 function log_command() {
-	echo "RUN $(sudo tail -n1 $CONTAINER_BASH_HISTORY)" >> $DOCKERFILE
+    if [[ $INTERACTIVE =~ .*false.* ]]
+    then
+        echo "RUN $COMMAND" >> $DOCKERFILE 
+    else
+        echo "RUN $(sudo tail -n1 $CONTAINER_BASH_HISTORY)" >> $DOCKERFILE
+    fi
 }
 
+function parse_args() {
+    export ARGS=$(echo $@ | sed 's|\(.*\)--\(.*\)|\1|g')
+    export DOCKER_RUN_ARGS=$(echo $@ | sed 's|\(.*\)--\(.*\)|\2|g')
+    export DOCKER_BASE_IMAGE=$(echo $DOCKER_RUN_ARGS | awk '{print $NF}')
+    while getopts "hc:d:" OPTION
+    do
+        case "$OPTION" in
+            c)
+                export COMMAND="$OPTARG"
+                export INTERACTIVE="false";;
+            h|?|*) usage; exit 0;;
+        esac
+    done
+}
 
-DOCKER_RUN_ARGS="$@"
-DOCKER_BASE_IMAGE=$(echo $DOCKER_RUN_ARGS | awk '{print $NF}')
-export DOCKERFILE="Dockerfile.$(date +%Y%m%d%H%M)"
-echo "FROM $DOCKER_BASE_IMAGE" > $DOCKERFILE
+function usage() {
+    echo "Usage: $(basename $0) [-c 'command'] [-h] -- \$DOCKER_RUN_ARGS"
+    echo "  -c                  executes and commits 'command' to Dockefile"
+    echo "  -h                  shows usage"
+    echo "  \$DOCKER_RUN_ARGS   will be passed to 'docker run' directly."
+    echo "                      NOTE: do not add command at the end,"
+    echo "                      'image:tag' must be the last argument."
+    echo ""
+    echo "Examples:"
+    echo ""
+    echo "$(basename $0) -c 'apt-get install -y vim' -- -v /mnt:/mnt ubuntu:saucy"
+}
+
 
 if [ $(id -u) -ne 0 ]
 then
-	echo "We need 'root' privileges for some actions!"
-	if which sudo &> /dev/null
-	then
-		sudo ls > /dev/null
-	else
-		exit 0
-	fi
+    echo "We need 'root' privileges for some actions!"
+    if which sudo &> /dev/null
+    then
+        sudo ls > /dev/null
+    else
+        exit 0
+    fi
 fi
 
-#init_conf &
-#commit_monitor &
-aliases_monitor &
+parse_args $@
 
-docker run -t -i $DOCKER_RUN_ARGS /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> /etc/profile.d/inmediately-save-history.sh; /bin/bash --login; rm /etc/profile.d/inmediately-save-history.sh; sleep 0.1; test -e ~/.bash_history && rm ~/.bash_history'
+create_base_dockerfile
+
+if [ -z $COMMAND ]
+then
+    aliases_monitor &
+    docker run -t -i $DOCKER_RUN_ARGS /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> /etc/profile.d/inmediately-save-history.sh; /bin/bash --login; rm /etc/profile.d/inmediately-save-history.sh; sleep 0.1; test -e ~/.bash_history && rm ~/.bash_history'
+    #docker commit
+else
+    docker run -t -i $DOCKER_RUN_ARGS $COMMAND
+    log_command
+    # docker commit
+fi
 
 # if Dockerfile only has the first line, remove it
 if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
 then 
-	rm $DOCKERFILE
+    rm $DOCKERFILE
 fi
