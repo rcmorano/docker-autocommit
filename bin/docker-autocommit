@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 
 function aliases_monitor() {
     CONTAINER=$(get_container_id)
