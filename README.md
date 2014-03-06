@@ -97,6 +97,21 @@ RUN exit 0
 ```
 _NOTE: if you exit from shell with CTRL+D the 'exit 0' won't be saved to Dockerfile_
 
+## Usage
+
+```
+Usage: docker-autocommit [-c 'command'] [-h] -- $DOCKER_RUN_ARGS
+  -c                  executes and commits 'command' to Dockefile
+  -h                  shows usage
+  $DOCKER_RUN_ARGS   will be passed to 'docker run' directly.
+                      NOTE: do not add command at the end,
+                      'image:tag' must be the last argument.
+
+Examples:
+
+docker-autocommit -c 'apt-get install -y vim' -- -v /mnt:/mnt ubuntu:saucy
+```
+
 ## Considerations
 
 * You could dettach and commit your interactive container since 'docker-autocommit' will clean the only two files it produces but...:
