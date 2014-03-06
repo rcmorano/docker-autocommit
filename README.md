@@ -109,7 +109,11 @@ Usage: docker-autocommit [-c 'command'] [-h] -- $DOCKER_RUN_ARGS
 
 Examples:
 
+# Commit a simple 'apt-get install':
 docker-autocommit -c 'apt-get install -y vim' -- -v /mnt:/mnt ubuntu:saucy
+# Bind a local dir into an interactive containeri and bind port 80 on all
+# interfaces: 
+docker-autocommit -- -v ~/Projects/dummy-rails-app:/dummy-rails-app 80:80 ubuntu:saucy
 ```
 
 ## Considerations
