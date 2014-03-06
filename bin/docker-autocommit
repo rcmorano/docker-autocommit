@@ -96,7 +96,7 @@ function usage() {
     echo "$BINARY -c 'apt-get install -y vim' -- -v /mnt:/mnt ubuntu:saucy"
     echo "# Bind a local dir into an interactive containeri and bind port 80 on all"
     echo "# interfaces:"
-    echo "$BINARY -- -v ~/Projects/dummy-rails-app:/dummy-rails-app 80:80 ubuntu:saucy"
+    echo "$BINARY -- -v ~/Projects/dummy-rails-app:/dummy-rails-app -p 80:80 ubuntu:saucy"
     echo ""
 }
 

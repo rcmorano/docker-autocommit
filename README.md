@@ -113,7 +113,7 @@ Examples:
 docker-autocommit -c 'apt-get install -y vim' -- -v /mnt:/mnt ubuntu:saucy
 # Bind a local dir into an interactive containeri and bind port 80 on all
 # interfaces: 
-docker-autocommit -- -v ~/Projects/dummy-rails-app:/dummy-rails-app 80:80 ubuntu:saucy
+docker-autocommit -- -v ~/Projects/dummy-rails-app:/dummy-rails-app -p 80:80 ubuntu:saucy
 ```
 
 ## Considerations
