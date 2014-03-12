@@ -4,7 +4,8 @@
 
 It just spawns an interactive 'bash' shell on a given 'docker' "image:tag" and starts to monitor its '.bash_history' which is configured to inmediately write commands to disk. They are written once they have exited, wether exited _zero_ or not!
 
-It monitors the '.bash_history' file in the container with 'inotifywait' and when a change is detected, a "RUN _command_executed_in_the_interctive_shell_" is added to a _Dockerfile.$timestamp_ in the directory where we run 'docker-autocommit'.
+For the moment it monitors the '.bash_history' file in the container with 'inotifywait' and when a change is detected, a "RUN _command_executed_in_the_interctive_shell_" is added to a _Dockerfile.$timestamp_ in the directory where we run 'docker-autocommit'.
+In the future it will also (optionally) autocommit the running container into 'docker' also.
 
 Now with 'docker-autocommit' you have an easy way to write your _Dockerfiles_ without too much _copy & pasting_.
 
@@ -122,6 +123,7 @@ docker-autocommit -- -v ~/Projects/dummy-rails-app:/dummy-rails-app -p 80:80 ubu
 * You could dettach and commit your interactive container since 'docker-autocommit' will clean the only two files it produces but...:
 * IMPORTANT: Note that if you make any changes to filesystem from outside command line (in e.g.: you edit files with 'vim' or modify anything interactively), your _Dockerfile_ might build an inconsistent container not reproducing the exactly same container as the one of the interactive shell.
 * You can edit the generated _Dockerfile_ while running the interactive shell, but be careful not to overwrite changes made by 'docker-autocommit'.
+* You will probably mess a lot your and have lots of test images and containers around so you may find useful some of [these bash aliases](https://gist.github.com/rcmorano/9396626)
 * More to add, suggestions accepted
 
 # Contrib!
@@ -148,9 +150,9 @@ root@c29ae4ab011d:/docker-autocommit# cucumber
 ...
 ```
 
-**Note** that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container if you are using pure 'aufs'.
+* **Note**: that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container if you are using pure 'aufs'.
 It's 
-**Note2** 'aufs' use on top of 'btrfs' is broken AFAIK.
+* **Note2**: 'aufs' use on top of 'btrfs' is broken AFAIK.
 
 ## Why this way of development?
 
