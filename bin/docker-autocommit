@@ -21,6 +21,10 @@ function aliases_monitor() {
 
 function create_base_dockerfile() {
     export DOCKERFILE="Dockerfile.$(date +%Y%m%d%H%M)"
+
+    test -e Dockerfile.latest && rm Dockerfile.latest
+    ln -fs $DOCKERFILE Dockerfile.latest
+
     echo "FROM $DOCKER_BASE_IMAGE" > $DOCKERFILE
 
 }
