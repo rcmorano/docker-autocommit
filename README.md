@@ -5,7 +5,7 @@
 It just spawns an interactive 'bash' shell on a given 'docker' "image:tag" and starts to monitor its '.bash_history' which is configured to inmediately write commands to disk. They are written once they have exited, wether exited _zero_ or not!
 
 For the moment it monitors the '.bash_history' file in the container with 'inotifywait' and when a change is detected, a "RUN *command_executed_in_the_interctive_shell*" is added to a _Dockerfile.$timestamp_ in the directory where we run 'docker-autocommit'.
-In the future it will also (optionally) autocommit the running container into 'docker' also.
+In the future it will (optionally) autocommit the running container into 'docker' also.
 
 Now with 'docker-autocommit' you have an easy way to write your _Dockerfiles_ without too much _copy & pasting_.
 
