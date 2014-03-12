@@ -88,7 +88,7 @@ rcmorano@localhost:~/Projects/container-poc$
 Get a ready to build _Dockerfile_:
 ```
 rcmorano@localhost:~/Projects/container-poc$ ls
-Dockerfile.201402222035
+Dockerfile.201402222035 Dockerfile.latest
 rcmorano@localhost:~/Projects/container-poc$ cat Dockerfile.201402222035 
 FROM ubuntu:saucy
 RUN apt-get update
