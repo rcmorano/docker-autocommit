@@ -128,7 +128,9 @@ docker-autocommit -- -v ~/Projects/dummy-rails-app:/dummy-rails-app -p 80:80 ubu
 
 _#FIXME#_
 
-Just run a 'docker-autocommit' developement container (it's a trusted build linked to this project's _Dockerfile_):
+Just run a 'docker-autocommit' developement container (it's a trusted build linked to this project's _Dockerfile_).
+
+'docker' is installed inside the container (thx to @jpetazzo for the 'dind' approach) so it has to run as privileged in order to run test containers inside:
 
 ```
 git clone https://github.com/rcmorano/docker-autocommit.git
@@ -142,12 +144,13 @@ And you'll get a pristine developer environment with a separated 'git' repo moun
 WARNING: WARNING: Local (127.0.0.1) DNS resolver found in resolv.conf and containers can't use it. Using default external servers : [8.8.8.8 8.8.4.4]
 root@c29ae4ab011d:/# cd docker-autocommit
 root@c29ae4ab011d:/docker-autocommit# cucumber
-_#TODO#_
+#TODO: create tests and explain how to BDD featuring
 ...
 ```
 
-*Note* that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container if you are using pure 'aufs'.
-*Note2* 'aufs' use on top of 'btrfs' is broken AFAIK 
+**Note** that the dev-container is configured to run docker with the experimental 'btrfs' driver. Just remove '-s btrfs' from 'Dockerfile' and rebuild container if you are using pure 'aufs'.
+It's 
+**Note2** 'aufs' use on top of 'btrfs' is broken AFAIK.
 
 ## Why this way of development?
 
