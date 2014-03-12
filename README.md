@@ -1,6 +1,6 @@
 # Introducing 'docker-autocommit'
 
-'docker-autocommit' is a PoC (Proof Of Concept) developed in pure 'bash' that sets my workflow.
+'docker-autocommit' is a PoC (Proof Of Concept) developed in pure 'bash' that defines a container-driven development workflow for the new 'docker' era.
 
 It just spawns an interactive 'bash' shell on a given 'docker' "image:tag" and starts to monitor its '.bash_history' which is configured to inmediately write commands to disk. They are written once they have exited, wether exited _zero_ or not!
 
