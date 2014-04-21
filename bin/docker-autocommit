@@ -80,7 +80,7 @@ function log_command() {
     then
         echo "RUN $COMMAND" >> $DOCKERFILE 
     else
-        echo "RUN $(sudo tail -n1 $CONTAINER_BASH_HISTORY)" >> $DOCKERFILE
+        echo "RUN $(sudo tail -n1 $CONTAINER_BASH_HISTORY 2>/dev/null)" >> $DOCKERFILE
     fi
 }
 
