@@ -19,6 +19,16 @@ function aliases_monitor() {
     done
 }
 
+function clean_up() {
+    # if Dockerfile only has the first line, remove it
+    if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
+    then
+        rm $DOCKERFILE
+    fi
+    # kill any inotifywait process that could be left
+    pkill -9 -f inotifywait.*$(get_container_id)
+}
+
 function create_base_dockerfile() {
     export DOCKERFILE="Dockerfile.$(date +%Y%m%d%H%M)"
 
@@ -122,8 +132,4 @@ else
     # docker commit
 fi
 
-# if Dockerfile only has the first line, remove it
-if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
-then 
-    rm $DOCKERFILE
-fi
+
