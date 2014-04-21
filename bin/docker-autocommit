@@ -1,32 +1,46 @@
 #!/bin/bash
-#set -x
 
 function aliases_monitor() {
-    CONTAINER=$(get_container_id)
+    export CONTAINER_ID=$(get_container_id) && echo $CONTAINER_ID >> $TEMPFILE
     CONTAINER_ROOT=$(get_container_root)
     CONTAINER_BASH_HISTORY="${CONTAINER_ROOT}/.bash_history"
     INOTIFY_OPTIONS='-m -r'
 
     while [[ ! "$(sudo inotifywait -e create $CONTAINER_ROOT 2> /dev/null)" =~ .*bash_history.* ]]
     do
-        continue
+        # if main process hasnt been cleaned up yet
+        if [[ -e $TEMPFILE ]]
+        then
+            sleep 0.1
+            continue
+        else
+            break
+        fi
     done
     log_command
 
     while sudo inotifywait -e modify $CONTAINER_BASH_HISTORY &> /dev/null
     do
-        log_command
+        if [[ -e $TEMPFILE ]]
+        then
+            log_command
+        else
+            break
+        fi
     done
 }
 
 function clean_up() {
+    CONTAINER_ID=$(cat $TEMPFILE)
     # if Dockerfile only has the first line, remove it
     if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
     then
         rm $DOCKERFILE
     fi
+    # remove temp/lock file
+    rm $TEMPFILE
     # kill any inotifywait process that could be left
-    pkill -9 -f inotifywait.*$(get_container_id)
+    pkill -9 -f inotifywait.*$CONTAINER_ID
 }
 
 function create_base_dockerfile() {
@@ -49,7 +63,7 @@ function get_container_id() {
 }
 
 function get_container_root() {
-    ROOT_DIR="$(docker inspect $CONTAINER | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g')/root"
+    ROOT_DIR="$(docker inspect $CONTAINER_ID | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g')/root"
     echo $ROOT_DIR
 }
 
@@ -123,6 +137,7 @@ create_base_dockerfile
 
 if [ -z $COMMAND ]
 then
+    export TEMPFILE=$(tempfile)
     aliases_monitor &
     docker run -t -i $DOCKER_RUN_ARGS /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> /etc/profile.d/inmediately-save-history.sh; /bin/bash --login; rm /etc/profile.d/inmediately-save-history.sh; sleep 0.1; test -e ~/.bash_history && rm ~/.bash_history'
     #docker commit
@@ -132,4 +147,4 @@ else
     # docker commit
 fi
 
-
+clean_up
