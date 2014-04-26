@@ -23,12 +23,6 @@ Think about it like the inverse approach to write a _Dockerfile_.
 
 Because from the PoV of having the minimum dependencies (and maximum cross-distro support), 'bash' and the 'inotify-tools' suite looked good.
 
-But I have some other branch around to implement it in ruby.
-
-### Why not contribute to 'docker' project directly?
-
-Because this is just a PoC :]
-
 # Installation
 
 Install depends:
@@ -44,7 +38,7 @@ sudo ln -s $PWD/docker-autocommit/bin/docker-autocommit /usr/local/sbin/
 chmod +x /usr/local/sbin/docker-autocommit
 ```
 
-Or just download the binary:
+Or just download the "binary":
 
 ```
 sudo curl -L https://raw.github.com/rcmorano/docker-autocommit/master/bin/docker-autocommit -o /usr/local/sbin/docker-autocommit
@@ -121,9 +115,9 @@ docker-autocommit -- -v ~/Projects/dummy-rails-app:/dummy-rails-app -p 80:80 ubu
 ## Considerations
 
 * You could dettach and commit your interactive container since 'docker-autocommit' will clean the only two files it produces but...:
-* IMPORTANT: Note that if you make any changes to filesystem from outside command line (in e.g.: you edit files with 'vim' or modify anything interactively), your _Dockerfile_ might build an inconsistent container not reproducing the exactly same container as the one of the interactive shell.
+  * IMPORTANT: Note that if you make any changes to filesystem from outside command line (in e.g.: you edit files with 'vim' or modify anything interactively), your _Dockerfile_ might build an inconsistent container not reproducing the exactly same container as the one of the interactive shell.
 * You can edit the generated _Dockerfile_ while running the interactive shell, but be careful not to overwrite changes made by 'docker-autocommit'.
-* You will probably mess a lot your and have lots of test images and containers around so you may find useful some of [these bash aliases](https://gist.github.com/rcmorano/9396626)
+* You will probably mess a lot your and have lots of test images and containers around so you may find useful [docker-baids (bash aids)](https://github.com/rcmorano/docker-baids). It's just a set of bash functions and aliases project.
 * More to add, suggestions accepted
 
 # Contrib!
