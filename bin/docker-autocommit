@@ -32,10 +32,17 @@ function aliases_monitor() {
 
 function clean_up() {
     CONTAINER_ID=$(cat $TEMPFILE)
-    # if Dockerfile only has the first line, remove it
-    if [ $(wc -l $DOCKERFILE | awk '{print $1}') -eq 1 ]
+    # if $DOCKERFILE has been removed, remove the lastest link also
+    if [ ! -e $DOCKERFILE ]
     then
-        rm $DOCKERFILE
+        rm Dockerfile.latest
+    else
+        # if Dockerfile only has the first line, remove it
+        DOCKERFILE_LEN=$(wc -l $DOCKERFILE | awk '{print $1}')
+        if [ $DOCKERFILE_LEN -le 1 ]
+        then
+            rm $DOCKERFILE
+        fi
     fi
     # remove temp/lock file
     rm $TEMPFILE
