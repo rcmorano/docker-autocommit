@@ -74,7 +74,7 @@ function get_container_id() {
 
 function get_container_root() {
     FULL_CID=$(docker inspect $CONTAINER_ID | grep ID.: | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|,||g' -e 's| ||g')
-    HOSTS_PATH="$(docker inspect $CONTAINER_ID | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g')"
+    HOSTS_PATH="$(docker inspect $CONTAINER_ID | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g' -e 's| ||g')"
     if [ -e $HOSTS_PATH/root ]
     then
         ROOT_DIR="$HOSTS_PATH/root"
