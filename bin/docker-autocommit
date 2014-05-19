@@ -91,11 +91,15 @@ function get_last_container() {
 }
 
 function log_command() {
-    if [[ $INTERACTIVE =~ .*false.* ]] && [[ ! -z $COMMAND ]]
+    if [[ $INTERACTIVE =~ .*false.* ]]
     then
         echo "RUN $COMMAND" >> $DOCKERFILE 
     else
-        echo "RUN $(sudo tail -n1 $CONTAINER_BASH_HISTORY 2>/dev/null)" >> $DOCKERFILE
+        COMMAND=$(sudo tail -n1 $CONTAINER_BASH_HISTORY 2>/dev/null)
+        if [ ! -z "$COMMAND" ]
+        then
+            echo "RUN $COMMAND" >> $DOCKERFILE
+        fi
     fi
 }
 
