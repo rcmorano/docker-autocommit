@@ -149,7 +149,7 @@ if [ -z $COMMAND ]
 then
     export TEMPFILE=$(tempfile)
     aliases_monitor &
-    docker run -t -i $DOCKER_RUN_ARGS /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -a;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> /etc/profile.d/inmediately-save-history.sh; /bin/bash --login; rm /etc/profile.d/inmediately-save-history.sh; sleep 0.1; test -e ~/.bash_history && rm ~/.bash_history'
+    docker run -t -i $DOCKER_RUN_ARGS /bin/bash -c 'echo "shopt -s histappend; PROMPT_COMMAND=\"history -w;$PROMPT_COMMAND\"; rm .bash_history 2>/dev/null; history -c" >> /etc/profile.d/inmediately-save-history.sh; /bin/bash --login; rm /etc/profile.d/inmediately-save-history.sh; sleep 0.1; test -e ~/.bash_history && rm ~/.bash_history'
     #docker commit
 else
     docker run -t -i $DOCKER_RUN_ARGS $COMMAND
