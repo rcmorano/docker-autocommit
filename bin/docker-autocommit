@@ -139,7 +139,7 @@ function require_sudo() {
 
 function usage() {
     BINARY=$(basename $0)
-    echo "Usage: $BINARY [-c 'command'] [-h] -- \$DOCKER_RUN_ARGS"
+    echo "Usage: $BINARY [-c 'command'] [-h] [-p] -- \$DOCKER_RUN_ARGS"
     echo "  -c                  executes and commits 'command' to Dockefile"
     echo "  -h                  shows usage"
 	echo "  -p                  autoprune=false"
