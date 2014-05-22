@@ -117,8 +117,8 @@ function parse_args() {
             c)
                 export COMMAND="$OPTARG"
                 export INTERACTIVE="false";;
-			p)	
-				export AUTOPRUNE="false";;
+            p)	
+                export AUTOPRUNE="false";;
             h|?|*) usage; exit 0;;
         esac
     done
@@ -142,7 +142,7 @@ function usage() {
     echo "Usage: $BINARY [-c 'command'] [-h] [-p] -- \$DOCKER_RUN_ARGS"
     echo "  -c                  executes and commits 'command' to Dockefile"
     echo "  -h                  shows usage"
-	echo "  -p                  autoprune=false"
+    echo "  -p                  autoprune=false"
     echo "  \$DOCKER_RUN_ARGS   will be passed to 'docker run' directly."
     echo "                      NOTE: do not add command at the end,"
     echo "                      'image:tag' must be the last argument."
