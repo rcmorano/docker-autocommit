@@ -95,9 +95,10 @@ _NOTE: if you exit from shell with CTRL+D the 'exit 0' won't be saved to Dockerf
 ## Usage
 
 ```
-Usage: docker-autocommit [-c 'command'] [-h] -- $DOCKER_RUN_ARGS
+Usage: docker-autocommit [-c 'command'] [-h] [-p] -- $DOCKER_RUN_ARGS
   -c                  executes and commits 'command' to Dockefile
   -h                  shows usage
+  -p                  autoprune=false
   $DOCKER_RUN_ARGS   will be passed to 'docker run' directly.
                       NOTE: do not add command at the end,
                       'image:tag' must be the last argument.

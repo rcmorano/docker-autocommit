@@ -47,9 +47,13 @@ function clean_up() {
     rm $TEMPFILE
     # kill any inotifywait process that could be left
     pkill -9 -f inotifywait.*$CONTAINER_ID
-    # ensure container is killed (it shud be dead at this point) and removed
+    # ensure container is killed (it shud be dead at this point)
     docker kill $CONTAINER_ID &> /dev/null
-    docker rm $CONTAINER_ID &> /dev/null
+    # remove container only if $AUTOPRUNE is not false
+    if [[ ! $AUTOPRUNE =~ .*false.* ]]
+    then
+    	docker rm $CONTAINER_ID &> /dev/null
+    fi
 }
 
 function create_base_dockerfile() {
@@ -107,12 +111,14 @@ function parse_args() {
     export ARGS=$(echo $@ | sed 's|\(.*\)--\(.*\)|\1|g')
     export DOCKER_RUN_ARGS=$(echo $@ | sed 's|\(.*\)--\(.*\)|\2|g')
     export DOCKER_BASE_IMAGE=$(echo $DOCKER_RUN_ARGS | awk '{print $NF}')
-    while getopts "hc:d:" OPTION
+    while getopts "hpc:d:" OPTION
     do
         case "$OPTION" in
             c)
                 export COMMAND="$OPTARG"
                 export INTERACTIVE="false";;
+            p)	
+                export AUTOPRUNE="false";;
             h|?|*) usage; exit 0;;
         esac
     done
@@ -133,9 +139,10 @@ function require_sudo() {
 
 function usage() {
     BINARY=$(basename $0)
-    echo "Usage: $BINARY [-c 'command'] [-h] -- \$DOCKER_RUN_ARGS"
+    echo "Usage: $BINARY [-c 'command'] [-h] [-p] -- \$DOCKER_RUN_ARGS"
     echo "  -c                  executes and commits 'command' to Dockefile"
     echo "  -h                  shows usage"
+    echo "  -p                  autoprune=false"
     echo "  \$DOCKER_RUN_ARGS   will be passed to 'docker run' directly."
     echo "                      NOTE: do not add command at the end,"
     echo "                      'image:tag' must be the last argument."
