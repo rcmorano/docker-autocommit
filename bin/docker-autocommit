@@ -47,9 +47,13 @@ function clean_up() {
     rm $TEMPFILE
     # kill any inotifywait process that could be left
     pkill -9 -f inotifywait.*$CONTAINER_ID
-    # ensure container is killed (it shud be dead at this point) and removed
+    # ensure container is killed (it shud be dead at this point)
     docker kill $CONTAINER_ID &> /dev/null
-    docker rm $CONTAINER_ID &> /dev/null
+    # remove container only if $AUTOPRUNE is not false
+    if [[ ! $AUTOPRUNE =~ .*false.* ]]
+    then
+    	docker rm $CONTAINER_ID &> /dev/null
+    fi
 }
 
 function create_base_dockerfile() {
