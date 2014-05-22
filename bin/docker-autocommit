@@ -1,4 +1,5 @@
 #!/bin/bash
+#set -x
 
 function aliases_monitor() {
     export CONTAINER_ID=$(get_container_id) && echo $CONTAINER_ID >> $TEMPFILE
@@ -84,6 +85,9 @@ function get_container_root() {
     elif [ -e "/var/lib/docker/aufs/mnt/$FULL_CID" ]
     then
         ROOT_DIR="/var/lib/docker/aufs/mnt/$FULL_CID"
+    elif [ -e "/var/lib/docker/devicemapper/mnt/$FULL_CID/rootfs" ]
+    then
+	ROOT_DIR="/var/lib/docker/devicemapper/mnt/$FULL_CID/rootfs"
     fi
         
     echo $ROOT_DIR
