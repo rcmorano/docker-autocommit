@@ -7,7 +7,7 @@ function aliases_monitor() {
     CONTAINER_BASH_HISTORY="${CONTAINER_ROOT}/.bash_history"
     INOTIFY_OPTIONS='-m -r'
 
-    while [[ ! "$(sudo inotifywait -e modify $CONTAINER_ROOT 2> /dev/null)" =~ .*bash_history.* ]]
+    while [[ ! "$(sudo inotifywait -e create -e modify $CONTAINER_ROOT 2> /dev/null)" =~ .*bash_history.* ]]
     do
         # if main process hasnt been cleaned up yet
         if [[ -e $TEMPFILE ]]
@@ -20,7 +20,7 @@ function aliases_monitor() {
     done
     log_command
 
-    while sudo inotifywait -e modify $CONTAINER_BASH_HISTORY &> /dev/null
+    while [[ $(sudo inotifywait -e modify $CONTAINER_BASH_HISTORY 2> /dev/null) =~ .* ]]
     do
         if [[ -e $TEMPFILE ]]
         then
