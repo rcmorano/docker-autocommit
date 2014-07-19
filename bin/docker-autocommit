@@ -77,7 +77,7 @@ function get_container_id() {
 }
 
 function get_container_root() {
-    FULL_CID=$(docker inspect $CONTAINER_ID | grep ID.: | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|,||g' -e 's| ||g')
+    FULL_CID=$(docker inspect $CONTAINER_ID | grep Id.: | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|,||g' -e 's| ||g')
     HOSTS_PATH="$(docker inspect $CONTAINER_ID | grep HostsPath | awk -F: '{print $2}' | sed -e 's|"||g' -e 's|/hosts||g' -e 's|,||g' -e 's| ||g')"
     if [ -e $HOSTS_PATH/root ]
     then
@@ -87,7 +87,7 @@ function get_container_root() {
         ROOT_DIR="/var/lib/docker/aufs/mnt/$FULL_CID"
     elif [ -e "/var/lib/docker/devicemapper/mnt/$FULL_CID/rootfs" ]
     then
-	ROOT_DIR="/var/lib/docker/devicemapper/mnt/$FULL_CID/rootfs"
+        ROOT_DIR="/var/lib/docker/devicemapper/mnt/$FULL_CID/rootfs"
     fi
         
     echo $ROOT_DIR
