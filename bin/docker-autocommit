@@ -94,7 +94,7 @@ function get_container_root() {
 }
 
 function get_last_container() {
-    LAST_CONTAINER=$(docker ps | grep -v ^CONTAINER | head -n1 | awk '{print $1}')
+    LAST_CONTAINER=$(docker ps -a | grep -v ^CONTAINER | head -n1 | awk '{print $1}')
     echo $LAST_CONTAINER
 }
 
